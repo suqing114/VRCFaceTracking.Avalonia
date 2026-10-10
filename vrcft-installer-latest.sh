@@ -114,16 +114,16 @@ build_project() {
     
     case "$platform" in
         osx-64)
-            dotnet publish "$build_project" -r osx-64 -c "MacOS Release" --self-contained -f net10.0
+            dotnet publish "$build_project" -r osx-64 -c Release --self-contained -f net10.0
             ;;
         osx-arm64)
-            dotnet publish "$build_project" -r osx-arm64 -c "MacOS Release" --self-contained -f net10.0
+            dotnet publish "$build_project" -r osx-arm64 -c Release --self-contained -f net10.0
             ;;
         linux-x64)
-            dotnet publish "$build_project" -r linux-x64 -c "Linux Release" --self-contained -f net10.0
+            dotnet publish "$build_project" -r linux-x64 -c Release --self-contained -f net10.0
             ;;
         linux-arm64)
-            dotnet publish "$build_project" -r linux-arm64 -c "Linux Release" --self-contained -f net10.0
+            dotnet publish "$build_project" -r linux-arm64 -c Release --self-contained -f net10.0
             ;;
     esac
 

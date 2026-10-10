@@ -252,16 +252,11 @@ if not exist "%BUILD_PROJECT%" (
   exit /b 1
 )
 
-rem Try "Windows Release" first; fallback to "Release"
-dotnet publish "%BUILD_PROJECT%" -r %RID% -c "Windows Release" --self-contained -f net10.0
+dotnet publish "%BUILD_PROJECT%" -r %RID% -c Release --self-contained -f net10.0
 if errorlevel 1 (
-  echo [WARN] Build with config "Windows Release" failed, trying "Release"...
-  dotnet publish "%BUILD_PROJECT%" -r %RID% -c "Release" --self-contained -f net10.0
-  if errorlevel 1 (
-    echo [ERROR] dotnet publish failed.
-    popd >nul
-    exit /b 1
-  )
+  echo [ERROR] dotnet publish failed.
+  popd >nul
+  exit /b 1
 )
 
 echo [OK] Build complete.

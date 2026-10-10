@@ -1,0 +1,8 @@
+<Project>
+  <!-- Pin C# 13: C# 14 (.NET 10 SDK) first-class span overload resolution breaks
+       char[].Reverse() LINQ chains in submodule code (CS0023). Targets are evaluated
+       after the project body, so this overrides LangVersion=latestmajor. -->
+  <PropertyGroup>
+    <LangVersion>13</LangVersion>
+  </PropertyGroup>
+</Project>
