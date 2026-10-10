@@ -6,11 +6,11 @@ rem ==========================================================
 rem  VRCFT Windows Installer
 rem ==========================================================
 
-set "MIN_DOTNET=8.0.404"
+set "MIN_DOTNET=10.0.100"
 set "INSTALL_DIR=%LOCALAPPDATA%\VRCFaceTracking"
 set "BUILD_PROJECT=src\VRCFaceTracking.Avalonia.Desktop\VRCFaceTracking.Avalonia.Desktop.csproj"
 
-set "REPO_URL=https://github.com/dfgHiatus/VRCFaceTracking.Avalonia.git"
+set "REPO_URL=https://github.com/suqing114/VRCFaceTracking.Avalonia.git"
 
 set "PAUSE_ON_SUCCESS=0"
 
@@ -29,7 +29,7 @@ call :EnsurePowerShell || goto :fail
 call :EnsureWinget
 
 call :EnsureGit || goto :fail
-call :EnsureDotnet8 || goto :fail
+call :EnsureDotnet10 || goto :fail
 
 call :PrepareRepo || goto :fail
 call :UpdateIfNeeded || goto :fail
@@ -116,37 +116,37 @@ if "%HAS_WINGET%"=="1" (
   exit /b 1
 )
 
-:EnsureDotnet8
+:EnsureDotnet10
 where /q dotnet.exe
 if errorlevel 1 (
   echo [INFO] dotnet not found.
   goto :InstallDotnet
 )
 
-set "DOTNET8_LATEST="
+set "DOTNET10_LATEST="
 for /f "usebackq delims=" %%V in (`powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "$min = [version]'%MIN_DOTNET%';" ^
   "$sdks = & dotnet --list-sdks 2>$null;" ^
   "if(-not $sdks){ exit 2 }" ^
-  "$v = $sdks | ForEach-Object { ($_ -split '\s+')[0] } | Where-Object { $_ -match '^8\.' } | ForEach-Object { [version]$_ } | Sort-Object | Select-Object -Last 1;" ^
+  "$v = $sdks | ForEach-Object { ($_ -split '\s+')[0] } | Where-Object { $_ -match '^10\.' } | ForEach-Object { [version]$_ } | Sort-Object | Select-Object -Last 1;" ^
   "if(-not $v){ exit 3 }" ^
   "if($v -lt $min){ exit 4 }" ^
-  "$v.ToString()"`) do set "DOTNET8_LATEST=%%V"
+  "$v.ToString()"`) do set "DOTNET10_LATEST=%%V"
 
-if defined DOTNET8_LATEST (
-  echo [OK] Using .NET SDK: %DOTNET8_LATEST%
+if defined DOTNET10_LATEST (
+  echo [OK] Using .NET SDK: %DOTNET10_LATEST%
   exit /b 0
 )
 
-echo [WARN] .NET 8 SDK missing or too old (need >= %MIN_DOTNET%).
+echo [WARN] .NET 10 SDK missing or too old (need >= %MIN_DOTNET%).
 goto :InstallDotnet
 
 :InstallDotnet
 if "%HAS_WINGET%"=="1" (
-  echo [INFO] Installing Microsoft .NET SDK 8 via winget...
-  winget install --id Microsoft.DotNet.SDK.8 -e --source winget
+  echo [INFO] Installing Microsoft .NET SDK 10 via winget...
+  winget install --id Microsoft.DotNet.SDK.10 -e --source winget
   if errorlevel 1 (
-    echo [ERROR] Failed to install .NET SDK 8 via winget.
+    echo [ERROR] Failed to install .NET SDK 10 via winget.
     echo        Please install .NET SDK >= %MIN_DOTNET% manually and rerun.
     exit /b 1
   )
@@ -253,10 +253,10 @@ if not exist "%BUILD_PROJECT%" (
 )
 
 rem Try "Windows Release" first; fallback to "Release"
-dotnet publish "%BUILD_PROJECT%" -r %RID% -c "Windows Release" --self-contained -f net8.0
+dotnet publish "%BUILD_PROJECT%" -r %RID% -c "Windows Release" --self-contained -f net10.0
 if errorlevel 1 (
   echo [WARN] Build with config "Windows Release" failed, trying "Release"...
-  dotnet publish "%BUILD_PROJECT%" -r %RID% -c "Release" --self-contained -f net8.0
+  dotnet publish "%BUILD_PROJECT%" -r %RID% -c "Release" --self-contained -f net10.0
   if errorlevel 1 (
     echo [ERROR] dotnet publish failed.
     popd >nul

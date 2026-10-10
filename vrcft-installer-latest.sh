@@ -12,25 +12,25 @@ if ! command -v git &> /dev/null; then
     exit 1
 fi
 
-# Minimum required .NET 8 version
-min_version="8.0.404"
+# Minimum required .NET 10 version
+min_version="10.0.100"
 
 # Check for .NET SDK
 if ! command -v dotnet &> /dev/null; then
-    echo "Error: .NET is not installed. Please install .NET 8.0.404 or higher."
+    echo "Error: .NET is not installed. Please install .NET 10.0.100 or higher."
     exit 1
 fi
 
-# Get installed .NET versions and filter for .NET 8 only
-installed_versions=$(dotnet --list-sdks | awk '{print $1}' | grep -E '^8\.')
+# Get installed .NET versions and filter for .NET 10 only
+installed_versions=$(dotnet --list-sdks | awk '{print $1}' | grep -E '^10\.')
 
-# Check if any .NET 8 version is installed
+# Check if any .NET 10 version is installed
 if [[ -z "$installed_versions" ]]; then
-    echo "Error: No .NET 8 version installed. Please install .NET 8.0.404 or higher."
+    echo "Error: No .NET 10 version installed. Please install .NET 10.0.100 or higher."
     exit 1
 fi
 
-# Get the highest available .NET 8 version
+# Get the highest available .NET 10 version
 latest_version=$(echo "$installed_versions" | sort -V | tail -n 1)
 
 # Check if the latest installed version is at least the minimum required version
@@ -114,16 +114,16 @@ build_project() {
     
     case "$platform" in
         osx-64)
-            dotnet publish "$build_project" -r osx-64 -c "MacOS Release" --self-contained -f net8.0
+            dotnet publish "$build_project" -r osx-64 -c "MacOS Release" --self-contained -f net10.0
             ;;
         osx-arm64)
-            dotnet publish "$build_project" -r osx-arm64 -c "MacOS Release" --self-contained -f net8.0
+            dotnet publish "$build_project" -r osx-arm64 -c "MacOS Release" --self-contained -f net10.0
             ;;
         linux-x64)
-            dotnet publish "$build_project" -r linux-x64 -c "Linux Release" --self-contained -f net8.0
+            dotnet publish "$build_project" -r linux-x64 -c "Linux Release" --self-contained -f net10.0
             ;;
         linux-arm64)
-            dotnet publish "$build_project" -r linux-arm64 -c "Linux Release" --self-contained -f net8.0
+            dotnet publish "$build_project" -r linux-arm64 -c "Linux Release" --self-contained -f net10.0
             ;;
     esac
 
